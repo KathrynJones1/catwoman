@@ -76,7 +76,7 @@ _rsky = Extension('catwoman._rsky', ['c_src/_rsky.c'], extra_compile_args = para
 _eclipse = Extension('catwoman._eclipse', ['c_src/_eclipse.c'], extra_compile_args = parallel_args, libraries = parallel_libraries)
 
 setup(	name='catwoman', 
-	version="1.0.14",
+	version="1.0.15",
 	author='Kathryn Jones',
 	author_email = 'kathryndjones@hotmail.co.uk',
 	url = 'https://github.com/KathrynJones1/catwoman',
