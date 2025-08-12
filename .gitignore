@@ -15,4 +15,3 @@ build/*
 dist
 MANIFEST
 catwoman_package.egg-info
-*.sh
