@@ -34,9 +34,9 @@ copyright = '2019, Kathryn Jones & Nestor Espinoza'
 author = 'Kathryn Jones'
 
 # The short X.Y version
-version = '1.0'
+version = '.'.join(catwoman.__version__.split('.')[:2])
 # The full version, including alpha/beta/rc tags
-release = '1.0.14'
+release = catwoman.__version__
 
 
 # -- General configuration ---------------------------------------------------
