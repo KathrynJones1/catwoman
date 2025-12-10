@@ -42,15 +42,14 @@ static PyObject *_nonlinear_ld(PyObject *self, PyObject *args)
 {
 	double rprs = 0.1;
 	double fac = 0.0001;
-	double mini = 1;
 	int nthreads = 1;
 	npy_intp dims[1];
 	double c1=0.1, c2=0.1, c3=0.1, c4=0.1;
 	double rp2;
 	bool twoc;	
 
-	PyArrayObject *ds, *flux, *b, *phi;
-  	if(!PyArg_ParseTuple(args,"OddddddiOOddb", &ds, &rprs, &c1, &c2, &c3, &c4, &fac, &nthreads, &phi, &b, &mini, &rp2, &twoc)) return NULL;
+	PyArrayObject *ds, *flux, *b, *phi, *x;
+  	if(!PyArg_ParseTuple(args,"OddddddiOOOdb", &ds, &rprs, &c1, &c2, &c3, &c4, &fac, &nthreads, &phi, &b, &x, &rp2, &twoc)) return NULL;
 	
 	dims[0] = PyArray_DIMS(ds)[0]; 
 	flux = (PyArrayObject *) PyArray_SimpleNew(1, dims, PyArray_TYPE(ds));	//creates numpy array to store return flux values
@@ -60,6 +59,7 @@ static PyObject *_nonlinear_ld(PyObject *self, PyObject *args)
 	
 	double *b_array = PyArray_DATA(b);
 	double *phi_array = PyArray_DATA(phi);
+	double *x_array = PyArray_DATA(x);
 
 
 	double norm = (-c1/10. - c2/6. - 3.*c3/14. - c4/4. + 0.5)*2.*M_PI;
@@ -77,7 +77,7 @@ static PyObject *_nonlinear_ld(PyObject *self, PyObject *args)
 	*/
 	double intensity_args[] = {c1, c2, c3, c4, norm};
 	#pragma acc data copyin(intensity_args)
-	calc_limb_darkening(f_array, d_array, dims[0], rprs, fac, nthreads, intensity_args, phi_array, b_array, mini, rp2, twoc);
+	calc_limb_darkening(f_array, d_array, dims[0], rprs, fac, nthreads, intensity_args, phi_array, b_array, x_array, rp2, twoc);
 	return PyArray_Return((PyArrayObject *)flux);
 } 
 

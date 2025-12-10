@@ -41,11 +41,11 @@ static PyObject *_logarithmic_ld(PyObject *self, PyObject *args)
 	int nthreads;
 	npy_intp dims[1];
 	double c1, c2;
-	double mini, rp2;
+	double rp2;
 	bool twoc;
 	
-	PyArrayObject *ds, *flux, *b, *phi;
-  	if(!PyArg_ParseTuple(args,"OddddiOOddb", &ds, &rprs, &c1, &c2, &fac, &nthreads, &phi, &b, &mini, &rp2, &twoc)) return NULL;
+	PyArrayObject *ds, *flux, *b, *phi, *x;
+  	if(!PyArg_ParseTuple(args,"OddddiOOOdb", &ds, &rprs, &c1, &c2, &fac, &nthreads, &phi, &b, &x, &rp2, &twoc)) return NULL;
 
 	dims[0] = PyArray_DIMS(ds)[0]; 
 	flux = (PyArrayObject *) PyArray_SimpleNew(1, dims, PyArray_TYPE(ds));	//creates numpy array to store return flux values
@@ -54,7 +54,8 @@ static PyObject *_logarithmic_ld(PyObject *self, PyObject *args)
 	double *d_array = PyArray_DATA(ds);
 	
 	double *b_array = PyArray_DATA(b);
-        double *phi_array = PyArray_DATA(phi);
+    double *phi_array = PyArray_DATA(phi);
+	double *x_array = PyArray_DATA(x);
 
 
 	/*
@@ -73,7 +74,7 @@ static PyObject *_logarithmic_ld(PyObject *self, PyObject *args)
 	double norm = (-3.*c1 + 2.*c2 + 9.)*M_PI/9.0; 	//normalization for intensity profile (faster to calculate it once, rather than every time intensity is called)		
 	double intensity_args[] = {c1, c2, norm};
 	#pragma acc data copyin(intensity_args)
-	calc_limb_darkening(f_array, d_array, dims[0], rprs, fac, nthreads, intensity_args, phi_array, b_array, mini, rp2, twoc);
+	calc_limb_darkening(f_array, d_array, dims[0], rprs, fac, nthreads, intensity_args, phi_array, b_array, x_array, rp2, twoc);
 
 	return PyArray_Return((PyArrayObject *)flux);
 

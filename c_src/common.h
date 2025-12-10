@@ -46,7 +46,7 @@ inline double intensity(double x, double* args);
 
 double area(double d, double x, double R, double theta);
 
-double find_theta(double phi, double d, double b, double mini, int i);
+double find_theta(double phi, double d, double b, double x);
 
 double area(double d, double x, double R, double theta)
 {
@@ -456,14 +456,16 @@ double area(double d, double x, double R, double theta)
 
 } 
 
-double find_theta(double phi, double d, double b, double mini, int i)
+double find_theta(double phi, double d, double b, double x)
 {
 	/* This function finds theta for a given phi, d and b */
+
+	bool before_mid = (x < 0.0);
 	
 	double lim = pow(10,-9);
 	double theta = 0.0;
 	if ((b>=0)||(fabs(b)<lim)){	
-		if (i <= mini){            
+		if (before_mid){            
 			if (phi >= acos(b/d) - lim) {
                         	theta = -(M_PI - asin(b/d) - phi);
                 	} else if (phi < acos(b/d) - lim) {
@@ -478,7 +480,7 @@ double find_theta(double phi, double d, double b, double mini, int i)
                 	}
 		}
 	} else {
-		if (i <= mini){ 
+		if (before_mid){ 
 			if (phi > -acos(fabs(b)/d) + lim) { 
 				theta = -(phi - asin(fabs(b)/d));
 			} else if (phi <= -acos(fabs(b)/d) + lim) { 
@@ -496,7 +498,7 @@ double find_theta(double phi, double d, double b, double mini, int i)
 	return theta;
 }
 
-void calc_limb_darkening(double* f_array, double* d_array, int N, double rprs, double fac, int nthreads, double* intensity_args, double* phi_array, double* b_array, double mini, double rp2, bool twoc)
+void calc_limb_darkening(double* f_array, double* d_array, int N, double rprs, double fac, int nthreads, double* intensity_args, double* phi_array, double* b_array, double* x_array, double rp2, bool twoc)
 {
 	/*
 		This function takes an array of sky distances (d_array) of length N, computes stellar intensity by calling intensity with
@@ -536,7 +538,7 @@ void calc_limb_darkening(double* f_array, double* d_array, int N, double rprs, d
 		
 			double theta=0.0, theta2=0.0, lim = pow(10,-9);
 			
-			theta = find_theta(phi, d, b, mini, i);
+			theta = find_theta(phi, d, b, x_array[i]);
 			
 										//adjusting theta to within the definition of the system so the area() eqns work
 			if (theta>=(M_PI/2+lim)){
