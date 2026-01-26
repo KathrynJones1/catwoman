@@ -11,6 +11,7 @@ build/*
 *.blg
 *.eps
 *.txt
+*.DS_Store
 
 dist
 MANIFEST

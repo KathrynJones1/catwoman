@@ -76,14 +76,13 @@ static PyObject *_quadratic_ld(PyObject *self, PyObject *args)
 */
     const int nthreads;
     const double c1, c2, p;
-    PyArrayObject *ds, *flux, *phi, *b;
+    PyArrayObject *ds, *flux, *phi, *b, *x;
     npy_intp dims[1];
     bool twoc;
     double fac = 0.0001;
-    double mini = 1;
     double rp2;
 
-    if(!PyArg_ParseTuple(args,"OddddiOOddb", &ds, &p, &c1, &c2, &fac, &nthreads, &phi, &b, &mini, &rp2, &twoc)) return NULL;
+    if(!PyArg_ParseTuple(args,"OddddiOOOdb", &ds, &p, &c1, &c2, &fac, &nthreads, &phi, &b, &x, &rp2, &twoc)) return NULL;
 
     dims[0] = PyArray_DIMS(ds)[0];
     flux = (PyArrayObject *) PyArray_SimpleNew(1, dims, PyArray_TYPE(ds));    //creates numpy array to store return flux values
@@ -93,6 +92,7 @@ static PyObject *_quadratic_ld(PyObject *self, PyObject *args)
     
     double *b_array = PyArray_DATA(b);
     double *phi_array = PyArray_DATA(phi);
+    double *x_array = PyArray_DATA(x);
 
     /*
     NOTE:  the safest way to access numpy arrays is to use the PyArray_GETITEM and PyArray_SETITEM functions.
@@ -107,7 +107,7 @@ static PyObject *_quadratic_ld(PyObject *self, PyObject *args)
 
 	double intensity_args[] = {c1, c2}; //added this
     	#pragma acc data copyin(intensity_args)
-    	calc_limb_darkening(f_array, d_array, dims[0], p, fac, nthreads, intensity_args, phi_array, b_array, mini, rp2, twoc);
+    	calc_limb_darkening(f_array, d_array, dims[0], p, fac, nthreads, intensity_args, phi_array, b_array, x_array, rp2, twoc);
     
     	return PyArray_Return((PyArrayObject *)flux);
 }
