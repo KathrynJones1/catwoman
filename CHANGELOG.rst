@@ -1,6 +1,7 @@
 .. :changelog:
 1.1.0 (26-01-26)
 ~~~~~~~~~~~~~~~~~~~
+-[NE] upgraded catwoman to account for Mans Holmberg's upgrades and bug fixes (see PR #19).
 -[NE] changed version to prep for major upgrade.
 
 1.0.14 (19-12-22)
