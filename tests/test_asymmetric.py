@@ -1,7 +1,10 @@
 import numpy as np
 import catwoman
-import twoface
-
+try:
+    import twoface
+except:
+    print('For this test to run you need to install twoface:')
+    print('pip install twoface')
 import pytest
 
 abs_tol = 1e-5
