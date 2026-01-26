@@ -1,4 +1,8 @@
 .. :changelog:
+1.1.0 (26-01-26)
+~~~~~~~~~~~~~~~~~~~
+-[NE] changed version to prep for major upgrade.
+
 1.0.14 (19-12-22)
 ~~~~~~~~~~~~~~~~~~~
 -updated version number to match pypi distributions.
